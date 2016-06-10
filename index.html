@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <style>
     .section { padding: 1em 0; }
+    /* An "em" is equal to the height of a line of text. */
     .header {
       background: linear-gradient(to bottom, #337ab7 0%, #135a97 100%);
       color: white;
@@ -14,9 +15,11 @@
     }
     #data-table td {
       width: 25%;
+      /* The table has four columns, so this rule makes them of equal width. */
     }
     .bar {
       height: 20px;
+      /* Note that we'll set the width dynamically using Javascript. */
       background: #337ab7;
     }
   </style>
@@ -185,8 +188,18 @@
     {"code":425,"name":"Empowering Males HS","level_text":"High","level":"hs","enrollment":150}
   ];
 
+  // The ALL_CAPS treatment here is signalling that this variable is a constant - it should never change.
   var MAX_ENROLLMENT = 1783;
 
+  // This is where we'll store the data representing user interaction; event handlers (the functions that
+  // are called when a user clicks a button) work by updating the properties of this object. An alternative
+  // approach, where each event handler directly updates the table, would quickly become messy. Imagine,
+  // for example, that I've filtered the table to just show elementary schools. Next, I sort the table to
+  // be in descending order. Finally, I unfilter the table to show all schools. If I'm not careful, the
+  // newly revealed schools will not be sorted, because the filter operation doesn't know how to sort.
+  // Instead, updateTable() will sort, filter, and paginate based on whatever the options object contains,
+  // always starting from a fresh copy of the data, and we can count on the result to be consistent
+  // given the same values in options.
   var options = {
     sorted: false,
     filtered: false,
@@ -201,8 +214,18 @@
     if (options.sorted) {
       if (options.sorted === 'asc') {
         data.sort(function (a, b) { return a.enrollment - b.enrollment; });
+        // This anonymous function is responsible for comparing two values a and b. If it returns a positive
+        // number, we're saying that a should come after b in the array. A negative number means that b
+        // should come after a. A zero means that the two are equal. This function is using the 'enrollment'
+        // property of each observation of data for this comparison. You'll need to change 'enrollment' to
+        // whatever property you want to sort your data on.
+        //
+        // Also, note that we're sorting the data in place, changing, or mutating, the 'data' variable. See
+        // the note in the README about how this compares to the filter() and slice() operations that we'll
+        // use for the next two data transforms.
       } else if (options.sorted === 'desc') {
         data.sort(function (a, b) { return b.enrollment - a.enrollment; });
+        // Note that this is just the opposite of the above.
       }
     }
 
@@ -212,13 +235,19 @@
 
     var table = document.getElementById('data-table');
     var tbody = table.getElementsByTagName('tbody')[0];
+    // Because getElementsByTagName returns an array of DOM nodes (technically, it's an HTMLCollection),
+    // we need to select the first item in the array with the [0].
 
     // Remove any existing rows
     tbody.innerHTML = '';
 
-    // Add a new row for each datum
+    // Add a new row for each datum (item in the 'data' array)
     data.forEach(function (d) {
       var row = document.createElement('tr');
+      // This is like create a new <tr></tr> in HTML, but it doesn't yet exist in the DOM, so we can't
+      // see it. At the bottom of this forEach() loop, we append it to an element that is in the DOM,
+      // at which point it appears. We'll follow this same pattern for each of the <td></td> elements
+      // we create below.
 
       var school = document.createElement('td');
       school.innerHTML = d.name;
@@ -235,7 +264,13 @@
       var barWrapper = document.createElement('td');
       var bar = document.createElement('div');
       bar.setAttribute('class', 'bar');
-      bar.setAttribute('style', 'width: ' + (d.enrollment / MAX_ENROLLMENT * 100) + '%;');
+      // We set the class to 'bar' so we can use the .bar class we have in our styles. This gives it a
+      // consistent height and a color.
+      var enrollmentPercentage = d.enrollment / MAX_ENROLLMENT;
+      bar.setAttribute('style', 'width: ' + (enrollmentPercentage * 100) + '%;');
+      // I've broken this operation up into two steps, which is a little different than we did in class.
+      // The end result is the same, though. If 'enrollmentPercentage' equals 0.75, this set the style
+      // attribute of our DIV so that it looks something like <div style="width: 75%;"></div>
       barWrapper.appendChild(bar);
       row.appendChild(barWrapper);
 
@@ -243,21 +278,27 @@
     });
   }
 
+  // The function declaration above just creates the function, it doesn't yet run it. That's what we
+  // do here, to make sure that the table is populated prior to the user clicking anything.
   updateTable();
 
+  // This is creating an event listener, a function that the browser will call every time the specified
+  // event is "fired" by the selected element (here the button with the id 'sort-asc').
   document.getElementById('sort-asc').addEventListener('click', function () {
-    // Disable the sort if 'asc' was previously selected
+    // Disable the sort if 'asc' was previously selected, otherwise set the sort to 'asc'
     if (options.sorted === 'asc') {
       options.sorted = false;
     } else {
       options.sorted = 'asc';
     }
 
+    // And now we need to re-run the function that populates the table. Note that the results will be
+    // different because we've change the options object.
     updateTable();
   });
 
   document.getElementById('sort-desc').addEventListener('click', function () {
-    // Disable the sort if 'desc' was previously selected
+    // Disable the sort if 'desc' was previously selected, otherwise set the sort to 'desc'
     if (options.sorted === 'desc') {
       options.sorted = false;
     } else {
@@ -266,6 +307,10 @@
 
     updateTable();
   });
+
+  // This is where we'll need to create new event listeners for our filter and next/previous page buttons.
+  // They'll look very similar to the above, just listening to different elements, and perhaps performing
+  // different actions when clicked.
 </script>
 </body>
 </html>
