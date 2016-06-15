@@ -39,7 +39,9 @@
       border: 2px solid #FFFFB2;
       border-radius: 24px;
     }
-
+    .hidden {
+      display: none;
+    }
     .btn:hover {
       background-color: #FD8D3C;
       color: #4C4C4C;
@@ -143,6 +145,13 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
     </table>
   </div>
 </div>
+
+<div class="btn-group" role="group" aria-label="Sort" style="align-left">
+          <button type="button" class="btn btn-default" id="page-prev">Previous</button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Sort" style="align-right">
+          <button type="button" class="btn btn-default" id="page-next">Next</button>
+        </div>
     <p style="text-align: right; font-family: 'Exo', sans-serif;
         color: #FFFFFF;">
         Source: The Sentencing Project.<br>
@@ -211,7 +220,9 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
         };
 
       function updateTable() {
-        var data = states.slice()
+        var data = states.slice()   
+
+             
 
         if(options.sorted) {
           if (options.sorted ==='asc') {
@@ -234,6 +245,18 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
             data=data.filter(function (d) {return d.Restrictions==='Restrictions Post-Sentence'; });
           }
         }
+
+
+        //I think I need to add another condition "AND length of data is >20 "
+        if(options.page===0) {
+            data=data.slice(0,15);
+          }else if (options.page===1) {
+            data=data.slice(16,30);
+          }else if(options.page=2) {
+            data-data.slice(31,45);
+          }else if(options.page=2) {
+            data-data.slice(46,50);}
+
 
         //Set variables to build table
         var table = document.getElementById('data-table');
@@ -355,7 +378,28 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
 
     updateTable();
   });
-
+//Is there a hide element option? Want to hide previous when page===0. On the right track below?
+      if (options.page===0){
+        document.getElementById('page-prev').setAttribute("class","hidden");
+        document.getElementById('page-next').addEventListener('click', function () {
+          options.page=1;
+          document.getElementById('page-prev').setAttribute("class","btn btn-default");
+          updateTable();});          
+      } else if (options.page===1){
+        
+        document.getElementById('page-prev').addEventListener('click', function () {
+          options.page=0;
+          updateTable();});          
+        document.getElementById('page-next').addEventListener('click', function () {
+          options.page=2;
+          updateTable();});
+      }else if (options.page===2){
+        document.getElementById('page-prev').addEventListener('click', function () {
+          options.page=1;
+          updateTable();});
+        document.getElementById('page-next').setAttribute("class","hidden");
+              }
+updateTable();
       </script>
       
 </body>
