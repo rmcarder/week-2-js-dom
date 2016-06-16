@@ -304,8 +304,10 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
     // Disable the sort if 'asc' was previously selected, otherwise set the sort to 'asc'
     if (options.sorted === 'asc') {
       options.sorted = false;
+      options.page = 0;
     } else {
       options.sorted = 'asc';
+      options.page = 0;
     }
 
     // And now we need to re-run the function that populates the table. Note that the results will be
@@ -317,8 +319,10 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
     // Disable the sort if 'desc' was previously selected, otherwise set the sort to 'desc'
     if (options.sorted === 'desc') {
       options.sorted = false;
+      options.page = 0;
     } else {
       options.sorted = 'desc';
+      options.page = 0;
     }
 
     updateTable();
@@ -328,8 +332,10 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
     // Disable the sort if 'desc' was previously selected, otherwise set the sort to 'desc'
     if (options.filtered === 'no rest') {
       options.filtered = false;
+      options.page = 0;
     } else {
       options.filtered = 'no rest';
+      options.page = 0;
     }
 
     updateTable();
@@ -339,8 +345,10 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
     // Disable the sort if 'desc' was previously selected, otherwise set the sort to 'desc'
     if (options.filtered === 'prison') {
       options.filtered = false;
+      options.page = 0;
     } else {
       options.filtered = 'prison';
+      options.page = 0;
     }
 
     updateTable();
@@ -350,8 +358,10 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
     // Disable the sort if 'desc' was previously selected, otherwise set the sort to 'desc'
     if (options.filtered === 'post') {
       options.filtered = false;
+      options.page = 0;
     } else {
       options.filtered = 'post';
+      options.page = 0;
     }
 
     updateTable();
@@ -361,8 +371,10 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
     // Disable the sort if 'desc' was previously selected, otherwise set the sort to 'desc'
     if (options.filtered === 'parole') {
       options.filtered = false;
+      options.page = 0;
     } else {
       options.filtered = 'parole';
+      options.page = 0;
     }
 
     updateTable();
@@ -372,8 +384,10 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
     // Disable the sort if 'desc' was previously selected, otherwise set the sort to 'desc'
     if (options.filtered === 'probation') {
       options.filtered = false;
+      options.page = 0;
     } else {
       options.filtered = 'probation';
+      options.page = 0;
     }
 
     updateTable();
@@ -383,8 +397,9 @@ people disenfranchised in 1976, 3.34 million in 1996, and over 5.85 million in
         document.getElementById('page-prev').setAttribute("class","hidden");
         document.getElementById('page-next').addEventListener('click', function () {
           options.page=1;
+          updateTable();
           document.getElementById('page-prev').setAttribute("class","btn btn-default");
-          updateTable();});          
+          updateTable();});        
       } else if (options.page===1){
         
         document.getElementById('page-prev').addEventListener('click', function () {
